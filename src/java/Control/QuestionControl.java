@@ -198,7 +198,6 @@ public class QuestionControl extends HttpServlet {
         } else if (request.getParameter("method").equals("addQuestion2") && acc.getIsAdmin().equals("true")) {
 
             if (numOfQuestion > 0) {
-
                 String idTest = "";
                 String time = request.getParameter("time");
                 String descriptionTs = request.getParameter("descriptionTs");

@@ -868,6 +868,50 @@ public class DAO {
         }
         return null;
     }
+    public ArrayList<Reporters> gettAllReporterWithTestDESC(String idTest) {
+        ArrayList<Reporters> data = new ArrayList<>();
+        String query = "select *\n"
+                + "from Reporter\n"
+                +"ORDER BY Grade DESC; \n"
+                + "where idTest=? and idRoom is null";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, idTest);
+            rs = ps.executeQuery();
+            while (rs.next()) { // Move the cursor to the first row
+                data.add(new Reporters(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+            }
+            return data;
+        } catch (Exception e) {
+            // Handle exceptions as needed
+            System.out.println("gettAllReporterWithTestDESC with userName:" + e.getMessage());
+
+        }
+        return null;
+    }
+        public ArrayList<Reporters> gettAllReporterWithTestASC(String idTest) {
+        ArrayList<Reporters> data = new ArrayList<>();
+        String query = "select *\n"
+                + "from Reporter\n"
+                +"ORDER BY Grade ASC; \n"
+                + "where idTest=? and idRoom is null";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, idTest);
+            rs = ps.executeQuery();
+            while (rs.next()) { // Move the cursor to the first row
+                data.add(new Reporters(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+            }
+            return data;
+        } catch (Exception e) {
+            // Handle exceptions as needed
+            System.out.println("gettAllReporterWithTestASC with userName:" + e.getMessage());
+
+        }
+        return null;
+    }
 
     public ArrayList<Reporters> gettAllReporterWithCode(String idTest, String idRoom) {
         ArrayList<Reporters> data = new ArrayList<>();
@@ -891,6 +935,55 @@ public class DAO {
         }
         return null;
     }
+    public ArrayList<Reporters> gettAllReporterWithCodeDESC(String idTest, String idRoom) {
+        ArrayList<Reporters> data = new ArrayList<>();
+        String query = "select *\n"
+                + "from Reporter\n"
+                +"ORDER BY Grade DESC \n"
+                + "where idTest=? and idRoom =?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, idTest);
+            ps.setString(2, idRoom);
+            rs = ps.executeQuery();
+            while (rs.next()) { // Move the cursor to the first row
+                data.add(new Reporters(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+            }
+            return data;
+        } catch (Exception e) {
+            // Handle exceptions as needed
+            System.out.println("gettAllReporterWithCodeDESC with userName:" + e.getMessage());
+
+        }
+        return null;
+    }
+    public ArrayList<Reporters> gettAllReporterWithCodeASC(String idTest, String idRoom) {
+        ArrayList<Reporters> data = new ArrayList<>();
+        String query = "select *\n"
+                + "from Reporter\n"
+                +"ORDER BY Grade ASC \n"
+                + "where idTest=? and idRoom =?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, idTest);
+            ps.setString(2, idRoom);
+            rs = ps.executeQuery();
+            while (rs.next()) { // Move the cursor to the first row
+                data.add(new Reporters(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+            }
+            return data;
+        } catch (Exception e) {
+            // Handle exceptions as needed
+            System.out.println("gettAllReporterWithCodeASC with userName:" + e.getMessage());
+
+        }
+        return null;
+    }
+
+
+    
 
     public boolean addReporter(Reporters rp) {
         String query;
