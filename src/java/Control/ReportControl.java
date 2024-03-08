@@ -34,13 +34,13 @@ public class ReportControl extends HttpServlet {
         if (request.getParameter("method").equals("room")) {
             String idTest = request.getParameter("idTest");
             String idRoom = request.getParameter("idRoom");
-            ArrayList<Reporters> listReporter = dao.gettAllReporterWithCode(idTest, idRoom);
+            ArrayList<Reporters> listReporter = dao.gettAllReporterWithCodeDESC(idTest, idRoom);
             request.setAttribute("listReporter", listReporter);
             request.getRequestDispatcher("show.jsp").forward(request, response);
 
         } else if (request.getParameter("method").equals("show")) {
             String idTest = request.getParameter("idTest");      
-            ArrayList<Reporters> listReporter = dao.gettAllReporterWithTest(idTest);
+            ArrayList<Reporters> listReporter = dao.gettAllReporterWithTestDESC(idTest);
             request.setAttribute("listReporter", listReporter);
             request.getRequestDispatcher("show.jsp").forward(request, response);
 //            //go back to lessson                           

@@ -233,8 +233,6 @@ public class DAO {
                 + "    FROM [Test]\n"
                 + "    WHERE idLesson = ?\n"
                 + ");\n"
-                
-                
                 //delete idTest in Reporter
                 + "DELETE FROM [Reporter]\n"
                 + "WHERE idTest IN (\n"
@@ -242,24 +240,21 @@ public class DAO {
                 + "    FROM [Test]\n"
                 + "    WHERE idLesson = ?\n"
                 + ");\n"
-                
-               // delete Test with idTest
+                // delete Test with idTest
                 + "DELETE FROM [Test]\n"
                 + "WHERE idLesson = ?;\n"
-                
                 // delete Lesson with idLEsson
                 + "DELETE FROM [Lessons]\n"
                 + "WHERE idLesson = ?;\n"
-                
                 + "COMMIT;";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setString(1, idLesson);
-            ps.setString(2, idLesson);   
-            ps.setString(3, idLesson);   
-            ps.setString(4, idLesson);   
-            ps.setString(5, idLesson);   
+            ps.setString(2, idLesson);
+            ps.setString(3, idLesson);
+            ps.setString(4, idLesson);
+            ps.setString(5, idLesson);
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
@@ -269,7 +264,7 @@ public class DAO {
             System.out.println("deleteLesson" + e.getMessage());
         }
 
-        return false;   
+        return false;
     }
 
     public boolean updateLesson(Lessons ls) {
@@ -868,12 +863,13 @@ public class DAO {
         }
         return null;
     }
+
     public ArrayList<Reporters> gettAllReporterWithTestDESC(String idTest) {
         ArrayList<Reporters> data = new ArrayList<>();
         String query = "select *\n"
                 + "from Reporter\n"
-                +"ORDER BY Grade DESC; \n"
-                + "where idTest=? and idRoom is null";
+                + "where idTest=? and idRoom is null \n"
+                + "ORDER BY Grade DESC; \n";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -890,12 +886,14 @@ public class DAO {
         }
         return null;
     }
-        public ArrayList<Reporters> gettAllReporterWithTestASC(String idTest) {
+
+    public ArrayList<Reporters> gettAllReporterWithTestASC(String idTest) {
         ArrayList<Reporters> data = new ArrayList<>();
         String query = "select *\n"
                 + "from Reporter\n"
-                +"ORDER BY Grade ASC; \n"
-                + "where idTest=? and idRoom is null";
+                + "where idTest=? and idRoom is null \n"
+                + "ORDER BY Grade ASC; \n";
+
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -935,12 +933,14 @@ public class DAO {
         }
         return null;
     }
+
     public ArrayList<Reporters> gettAllReporterWithCodeDESC(String idTest, String idRoom) {
         ArrayList<Reporters> data = new ArrayList<>();
         String query = "select *\n"
                 + "from Reporter\n"
-                +"ORDER BY Grade DESC \n"
-                + "where idTest=? and idRoom =?";
+                + "where idTest=? and idRoom =? \n"
+                + "ORDER BY Grade DESC \n";
+
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -958,12 +958,14 @@ public class DAO {
         }
         return null;
     }
+
     public ArrayList<Reporters> gettAllReporterWithCodeASC(String idTest, String idRoom) {
         ArrayList<Reporters> data = new ArrayList<>();
         String query = "select *\n"
                 + "from Reporter\n"
-                +"ORDER BY Grade ASC \n"
-                + "where idTest=? and idRoom =?";
+                + "where idTest=? and idRoom =? \n"
+                + "ORDER BY Grade ASC \n";
+
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -981,9 +983,6 @@ public class DAO {
         }
         return null;
     }
-
-
-    
 
     public boolean addReporter(Reporters rp) {
         String query;
