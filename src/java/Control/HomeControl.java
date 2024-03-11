@@ -30,9 +30,9 @@ public class HomeControl extends HttpServlet {
         DAO dao = new DAO();
         List<Topics> list = dao.getAllTopic();
         // put data to session
-        HttpSession session = request.getSession();
-        session.setAttribute("listTopic", list);
-        // set data to jsp       
+        HttpSession session = request.getSession();        
+        session.setAttribute("listTopic", list);  
+        
         request.getRequestDispatcher("home.jsp").forward(request, response);
     }
 
