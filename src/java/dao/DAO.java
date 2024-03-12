@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 /**
@@ -337,7 +338,7 @@ public class DAO {
     }
 
     public Tests getTestWithID(String id) {
-        String query = "SELECT * FROM Test where [idTest]=? "; // Replace 'YourTestTable' with the actual table name
+        String query = "SELECT * FROM Test where [idTest]=? "; 
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -360,7 +361,7 @@ public class DAO {
 
     public ArrayList<Tests> getTestWithLesson(String idLesson) {
         ArrayList<Tests> list = new ArrayList<>();
-        String query = "SELECT * FROM Test where idLesson=? "; // Replace 'YourTestTable' with the actual table name
+        String query = "SELECT * FROM Test where idLesson=? "; 
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -375,7 +376,6 @@ public class DAO {
                 list.add(getSQL);
             }
         } catch (Exception e) {
-            // Handle exceptions as needed
             System.out.println("getTestWithLesson:" + e.getMessage());
 
         }
@@ -397,7 +397,6 @@ public class DAO {
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (Exception e) {
-            // Handle exceptions as needed
             System.out.println("deleteTest:" + e.getMessage());
 
         }
@@ -420,7 +419,6 @@ public class DAO {
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (Exception e) {
-            // Handle exceptions as needed
             System.out.println("updateTest: " + e.getMessage());
         }
 
@@ -430,7 +428,7 @@ public class DAO {
     //question
     public ArrayList<Questions> getAllQuestion() {
         ArrayList<Questions> list = new ArrayList<>();
-        String query = "SELECT * FROM Questions"; // Replace 'YourTestTable' with the actual table name
+        String query = "SELECT * FROM Questions"; 
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -448,7 +446,6 @@ public class DAO {
                 list.add(getSQL);
             }
         } catch (Exception e) {
-            // Handle exceptions as needed
             System.out.println("getAllQuestion:" + e.getMessage());
 
         }
@@ -457,7 +454,7 @@ public class DAO {
 
     public ArrayList<Questions> getQuestionWithTest(String idTest) {
         ArrayList<Questions> list = new ArrayList<>();
-        String query = "SELECT * FROM Questions where idTest=? "; // Replace 'YourTestTable' with the actual table name
+        String query = "SELECT * FROM Questions where idTest=? "; 
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -477,7 +474,6 @@ public class DAO {
                 list.add(getSQL);
             }
         } catch (Exception e) {
-            // Handle exceptions as needed
             System.out.println("getQuestionWithTest:" + e.getMessage());
 
         }
@@ -582,14 +578,14 @@ public class DAO {
             ps.setString(1, userName);
             ps.setString(2, password);
             rs = ps.executeQuery();
-            if (rs.next()) { // Move the cursor to the first row
+            if (rs.next()) { 
                 acc.setUserName(rs.getString(1));
                 acc.setPassword(rs.getString(2));
                 acc.setIsAdmin(String.valueOf(rs.getBoolean(3)));
                 return acc;
             }
         } catch (Exception e) {
-            // Handle exceptions as needed
+         
             System.out.println("getAccount:" + e.getMessage());
 
         }
@@ -604,7 +600,7 @@ public class DAO {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
-            while (rs.next()) { // Move the cursor to the first row
+            while (rs.next()) { 
                 Accounts acc = new Accounts();
                 acc.setUserName(rs.getString(1));
                 acc.setPassword(rs.getString(2));
@@ -613,7 +609,7 @@ public class DAO {
             }
             return data;
         } catch (Exception e) {
-            // Handle exceptions as needed
+      
             System.out.println("getAllAccount:" + e.getMessage());
 
         }
@@ -621,16 +617,16 @@ public class DAO {
     }
 
     public boolean addAccount(Accounts acc) {
-        String query = "insert into Account(userName,password)\n"
-                + "values (?,?) "; // Replace 'YourTestTable' with the actual table name
+        String query = "insert into Account(userName,password,isAdmin)\n"
+                + "values (?,?,?) "; 
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setString(1, acc.getUserName());
             ps.setString(2, acc.getPassword());
+            ps.setString(3, acc.getIsAdmin());
             int rowsAffected = ps.executeUpdate();
-
-            // Kiểm tra xem có bất kỳ hàng nào được ảnh hưởng không
+           
             if (rowsAffected > 0) {
                 return true;
             } else {
@@ -1061,6 +1057,13 @@ public class DAO {
         //System.out.println(dao.getAllAccount());
         // System.out.println(dao.getQuestionWithTest("1"));
         //System.out.println(dao.gettAllReporterWithTest("1"));
-        System.out.println(dao.deleteLesson("8"));
+        //System.out.println(dao.deleteLesson("8"));
+        System.out.println(randomCode());
     }
+       public static String randomCode() {
+        long now = System.currentTimeMillis();
+        String codeNow = Long.toHexString(now);
+        return codeNow;
+        
+       }
 }

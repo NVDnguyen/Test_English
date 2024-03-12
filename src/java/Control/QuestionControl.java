@@ -7,6 +7,7 @@ package Control;
 import Model.Accounts;
 import Model.Lessons;
 import Model.Questions;
+import Model.Rooms;
 import Model.Tests;
 import Model.Topics;
 
@@ -68,34 +69,30 @@ public class QuestionControl extends HttpServlet {
         HttpSession ss = request.getSession();
         if (ss.getAttribute("acc") != null) {
             Accounts acc = (Accounts) ss.getAttribute("acc");
-            if (request.getParameter("method").equals("create")) {
+            if (request.getParameter("method").equals("create")) { // create,add question for test, only admin , in edit page
 
                 if (acc.getIsAdmin().equals("true")) {
                     String idTest = request.getParameter("idTest");
                     request.setAttribute("idTest", idTest);
+                    request.setAttribute("action", "1");
                 }
-                request.setAttribute("first", true);
-                request.setAttribute("second", false);
-                request.setAttribute("third", false);
-
-                request.getRequestDispatcher("createQuestion.jsp").forward(request, response);
-
-            } else if (request.getParameter("method").equals("addQuestion2")) { //method only for admin       
+            } else if (request.getParameter("method").equals("addQuestion2")) { //method add question for test in lesson page     
                 request.setAttribute("idLesson", request.getParameter("idLesson"));
-                request.setAttribute("first", true);
-                request.setAttribute("second", false);
-                request.setAttribute("third", false);
-                request.getRequestDispatcher("createQuestion.jsp").forward(request, response);
-            } else if (request.getParameter("method").equals("addQuestion3")) { //method only for admin       
-                request.setAttribute("idLesson", request.getParameter("idLesson"));
-                request.setAttribute("first", true);
-                request.setAttribute("second", false);
-                request.setAttribute("third", false);
-                request.getRequestDispatcher("createQuestion.jsp").forward(request, response);
+                request.setAttribute("action", "2");
+
+            } else if (request.getParameter("method").equals("addQuestion3")) { //create test for room exam   
+                request.setAttribute("action", "3");
+
             }
+            request.setAttribute("a", true);
+            request.setAttribute("b", false);
+            request.setAttribute("c", false);
+            request.setAttribute("d", false);
+
+            request.getRequestDispatcher("createQuestion.jsp").forward(request, response);
         } else {
-            request.setAttribute("notice", "You must login");
-            request.getRequestDispatcher("exam.jsp").forward(request, response);
+            request.setAttribute("notice", "You must login to create/edit question/test");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         }
 
     }
@@ -117,33 +114,40 @@ public class QuestionControl extends HttpServlet {
         Accounts acc = (Accounts) ss.getAttribute("acc");
         DAO dao = new DAO();
         PrintWriter out = response.getWriter();
-        if (request.getParameter("method").equals("create")) {
-            if (request.getParameter("inNum") != null) { // number of question in test 
+        if (request.getParameter("method").equals("create")) { // get number of question
+            if (request.getParameter("inNum") != null) {
                 String sizeSTR = request.getParameter("numOfQuestion");
-                request.setAttribute("first", true);
-                request.setAttribute("second", false);
-                request.setAttribute("third", false);
+                request.setAttribute("a", true);
+                request.setAttribute("b", false);
+                request.setAttribute("c", false);
+                request.setAttribute("d", false);
                 try {
                     int size = Integer.parseInt(sizeSTR);
                     if (size > 0) {
                         numOfQuestion = size;
-                        if (request.getParameter("idTest")!=null || request.getParameter("idTest")!=null) {
-                            if (!request.getParameter("idTest").isBlank() && acc.getIsAdmin().equals("true")) { // create with idtesst
+                        // action 1 create,add question for idtest, only admin , in edit page
+                        if (request.getParameter("action").equals("1")) {
+                            if (!request.getParameter("idTest").isBlank() && acc.getIsAdmin().equals("true")) {
                                 String idTest = request.getParameter("idTest");
                                 request.setAttribute("idTest", idTest);
-                                request.setAttribute("third", true);
+                                request.setAttribute("d", true);
 
-                            } else if (!request.getParameter("idLesson").isBlank() && acc.getIsAdmin().equals("true")) { //create with lesson 
+                            }
+                        } // action 2 method add question for test in idlesson page 
+                        else if (request.getParameter("action").equals(2)) {
+                            if (!request.getParameter("idLesson").isBlank() && acc.getIsAdmin().equals("true")) {
                                 Lessons ls = dao.getLessonWithID(request.getParameter("idLesson"));
                                 request.setAttribute("lesson", ls);
-                                request.setAttribute("second", true);
+                                request.setAttribute("c", true);
                             }
+                        } // action 3 create test for room exam
+                        else if (request.getParameter("action").equals("3")) {
+                            request.setAttribute("b", true);
                         } else {
-                            request.setAttribute("second", true);
-
+                            request.setAttribute("notice", "Something error !!!");
                         }
 
-                        request.setAttribute("first", false);
+                        request.setAttribute("a", false);
                         request.setAttribute("size", size);
                     } else {
                         request.setAttribute("notice", "Please enter number >0 !!!");
@@ -155,15 +159,17 @@ public class QuestionControl extends HttpServlet {
 
             }
 
-        } else if (request.getParameter("method").equals("addQuestion1")) {
+        } // create question for Room
+        else if (request.getParameter("method").equals("addQuestionB")) {
             if (numOfQuestion > 0 && acc != null) {
                 String idTest = "";
+                String nameRoom = request.getParameter("nameRoom");
                 String time = request.getParameter("time");
                 try {
                     //add question
                     int t = Integer.parseInt(time);
                     if (t > 0) {
-                        idTest = dao.createNewTest("Exam", null, t);
+                        idTest = dao.createNewTest(nameRoom, null, t);
                         for (int i = 1; i <= numOfQuestion; i++) {
                             String title = request.getParameter("title" + i);
                             String question = request.getParameter("question" + i);
@@ -186,16 +192,22 @@ public class QuestionControl extends HttpServlet {
                             dao.addQuestion(q);
 
                         }
-                    }
-                    // create rooms                   
-                    request.setAttribute("idTest", idTest);
-                    request.getRequestDispatcher("/room").forward(request, response);
+                        // create rooms    
+                        Rooms r = new Rooms(nameRoom, acc.getUserName(), idTest, "false");
+                        dao.addRoom(r);
+                        ArrayList<Rooms> rr = new ArrayList<>();
+                        rr = dao.getAllRoom(acc);
+                        ss.setAttribute("rooms", rr);
+                        request.getRequestDispatcher("exam.jsp").forward(request, response);
+                    }//else go back to lesson page
+
                 } catch (Exception e) {
                     System.out.println("addQuestion" + e.getMessage());
                 }
 
             }
-        } else if (request.getParameter("method").equals("addQuestion2") && acc.getIsAdmin().equals("true")) {
+        } // create question for a lesson
+        else if (request.getParameter("method").equals("addQuestionC") && acc.getIsAdmin().equals("true")) {
 
             if (numOfQuestion > 0) {
                 String idTest = "";
@@ -242,7 +254,7 @@ public class QuestionControl extends HttpServlet {
 
 //                            request.getRequestDispatcher("/home").forward(request, response);
                         }
-                    }
+                    } //else go back to leson page
 
                 } catch (Exception e) {
                     System.out.println("addQuestion" + e.getMessage());
@@ -250,7 +262,8 @@ public class QuestionControl extends HttpServlet {
                 }
 
             }
-        } else if (request.getParameter("method").equals("addQuestion3") && acc.getIsAdmin().equals("true")) {
+        } // create / add question for test
+        else if (request.getParameter("method").equals("addQuestionD") && acc.getIsAdmin().equals("true")) {
 
             if (numOfQuestion > 0) {
 

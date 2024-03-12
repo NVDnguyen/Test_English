@@ -115,7 +115,7 @@ public class ExamControl extends HttpServlet {
 
             }
         } else if (request.getParameter("create") != null) {
-            response.sendRedirect("question?method=create");
+            response.sendRedirect("question?method=addQuestion3");
         }
 
     }

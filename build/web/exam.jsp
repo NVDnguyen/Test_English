@@ -142,7 +142,7 @@
                     <div class="container">
                         <!-- Input -->
                         <!-- feature only for user -->
-                        <c:if test="${sessionScope.acc.getIsAdmin() eq 'false'}">
+                        <c:if test="${(sessionScope.acc.getIsAdmin() eq 'false') || (sessionScope.acc == null)}">
                             <div class="row justify-content-center">
                                 <div class="col-md-6 mt-5">
                                     <div class="card">
@@ -195,7 +195,7 @@
                                                     <td>${i.index + 1}</td>
                                                     <td>${room.nameRoom}</td>
                                                     <td>${room.creater}</td>
-                                                    <td>${room.codeRoom}</td>
+                                                    <td class="badge-success p-2">${room.codeRoom}</td>
                                                     <td>${room.active}</td>
                                                     <td><a href="report?method=room&idTest=${room.idTest}&idRoom=${room.idRoom}" class="text-success">Show</a></td>    
                                                     <c:if test="${room.active eq 'true' }">
