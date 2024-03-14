@@ -18,7 +18,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Random;
 
-
 /**
  *
  * @author nguye
@@ -338,7 +337,7 @@ public class DAO {
     }
 
     public Tests getTestWithID(String id) {
-        String query = "SELECT * FROM Test where [idTest]=? "; 
+        String query = "SELECT * FROM Test where [idTest]=? ";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -361,7 +360,7 @@ public class DAO {
 
     public ArrayList<Tests> getTestWithLesson(String idLesson) {
         ArrayList<Tests> list = new ArrayList<>();
-        String query = "SELECT * FROM Test where idLesson=? "; 
+        String query = "SELECT * FROM Test where idLesson=? ";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -428,7 +427,7 @@ public class DAO {
     //question
     public ArrayList<Questions> getAllQuestion() {
         ArrayList<Questions> list = new ArrayList<>();
-        String query = "SELECT * FROM Questions"; 
+        String query = "SELECT * FROM Questions";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -454,7 +453,7 @@ public class DAO {
 
     public ArrayList<Questions> getQuestionWithTest(String idTest) {
         ArrayList<Questions> list = new ArrayList<>();
-        String query = "SELECT * FROM Questions where idTest=? "; 
+        String query = "SELECT * FROM Questions where idTest=? ";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -578,14 +577,15 @@ public class DAO {
             ps.setString(1, userName);
             ps.setString(2, password);
             rs = ps.executeQuery();
-            if (rs.next()) { 
+            if (rs.next()) {
                 acc.setUserName(rs.getString(1));
                 acc.setPassword(rs.getString(2));
                 acc.setIsAdmin(String.valueOf(rs.getBoolean(3)));
+                acc.setBand(String.valueOf(rs.getBoolean(4)));
                 return acc;
             }
         } catch (Exception e) {
-         
+
             System.out.println("getAccount:" + e.getMessage());
 
         }
@@ -600,16 +600,18 @@ public class DAO {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
-            while (rs.next()) { 
+            while (rs.next()) {
                 Accounts acc = new Accounts();
                 acc.setUserName(rs.getString(1));
                 acc.setPassword(rs.getString(2));
                 acc.setIsAdmin(String.valueOf(rs.getBoolean(3)));
+                acc.setBand(String.valueOf(rs.getBoolean(4)));
+
                 data.add(acc);
             }
             return data;
         } catch (Exception e) {
-      
+
             System.out.println("getAllAccount:" + e.getMessage());
 
         }
@@ -618,7 +620,7 @@ public class DAO {
 
     public boolean addAccount(Accounts acc) {
         String query = "insert into Account(userName,password,isAdmin)\n"
-                + "values (?,?,?) "; 
+                + "values (?,?,?) ";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -626,7 +628,7 @@ public class DAO {
             ps.setString(2, acc.getPassword());
             ps.setString(3, acc.getIsAdmin());
             int rowsAffected = ps.executeUpdate();
-           
+
             if (rowsAffected > 0) {
                 return true;
             } else {
@@ -643,12 +645,57 @@ public class DAO {
     }
 
     public boolean checkAccount(Accounts acc) {
-        Accounts acc1 = getAccount(acc.getUserName(), acc.getPassword());
-        if (acc1 != null) {
-            return true;
+        try {
+            Accounts acc1 = getAccount(acc.getUserName(), acc.getPassword());
+            if (acc1 != null) {
+                if (acc1.getBand().equals("false")) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("checkAccount" + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public boolean bandAccount(String userName) {
+
+        String query = "  update Account\n"
+                + "  set band = 1\n"
+                + "  where userName =?";
+        
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, userName);
+            int check = ps.executeUpdate();
+            return check >0;
+            
+        } catch (Exception e) {
+            System.out.println("bandAccount " +e.getMessage());
         }
         return false;
     }
+       public boolean unbandAccount(String userName) {
+
+        String query = "  update Account\n"
+                + "  set band = 0\n"
+                + "  where userName =?";
+        
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, userName);
+            int check = ps.executeUpdate();
+            return check >0;
+            
+        } catch (Exception e) {
+            System.out.println("bandAccount " +e.getMessage());
+        }
+        return false;
+    }
+
 
     //Rooms Exam code
     public String getTestRoomIsActive(String codeRoom) {
@@ -1058,12 +1105,14 @@ public class DAO {
         // System.out.println(dao.getQuestionWithTest("1"));
         //System.out.println(dao.gettAllReporterWithTest("1"));
         //System.out.println(dao.deleteLesson("8"));
-        System.out.println(randomCode());
+        // System.out.println(randomCode());
+        System.out.println(dao.getAccount("user12345", "11111"));
     }
-       public static String randomCode() {
+
+    public static String randomCode() {
         long now = System.currentTimeMillis();
         String codeNow = Long.toHexString(now);
         return codeNow;
-        
-       }
+
+    }
 }

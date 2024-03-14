@@ -75,6 +75,10 @@ public class TestControl extends HttpServlet {
         } else if (request.getParameter("method").equals("editTest") && acc.getIsAdmin().equals("true")) {
             String idTest = request.getParameter("idTest");
             ArrayList<Questions> listQuestion = dao.getQuestionWithTest(idTest);
+            
+            
+            
+            
             Tests test = dao.getTestWithID(idTest);
             request.setAttribute("test", test);
             request.setAttribute("listQuestion", listQuestion);

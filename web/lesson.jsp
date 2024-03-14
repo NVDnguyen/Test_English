@@ -47,11 +47,7 @@
             <div class="container">
                 <div >
                     <div class=" d-flex justify-content-center align-items-center">
-                        <ul class="left-info">
-                            <li><a href="#"><i class="fa fa-clock-o text-white"></i>Mon-Fri 09:00-17:00</a></li>
-                            <li><a href="#"><i class="fa fa-phone text-white"></i>090-080-0760</a></li>
-
-                        </ul>
+                        
                     </div>
                 </div>
             </div>
@@ -138,12 +134,7 @@
             </div>
             <!-- Breadcrumb -->
             <div class="container mt-3">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb" style="background-color: transparent;">
-                        <li class="breadcrumb-item"><a href="home" class="text-success">Home</a></li>                       
-                        <li class="breadcrumb-item active" aria-current="page">${sessionScope.tp.getNameTopic()}</li>
-                    </ol>
-                </nav>
+               
             </div>
 
             <div class="container">
@@ -180,7 +171,7 @@
                                                 </c:forEach>
                                                 <!-- only Admin-->
                                                 <c:if test="${sessionScope.acc.getIsAdmin() eq 'true'}">                                                    
-                                                    <a class=" text-decoration-none text-success" href="question?method=addQuestion2&idLesson=${o.getIdLesson()}">+ Add a Test</a><br>
+                                                    <a class=" text-decoration-none text-success" href="question?method=addQuestionC&idLesson=${o.getIdLesson()}">+ Add a Test</a><br>
                                                 </c:if> 
 
                                             </td>

@@ -92,30 +92,36 @@ public class ExamControl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (request.getParameter("join") != null) {
-            String code = request.getParameter("roomCode");
-            String notice = "";
-            DAO dao = new DAO();
-            if (dao.getTestRoomIsActive(code) != null) {
-                String idTest = dao.getTestRoomIsActive(code);
-                Tests test = dao.getTestWithID(idTest);
-                List<Questions> q = dao.getQuestionWithTest(idTest);
-                Rooms r = dao.getRoom(code);
+        HttpSession ss = request.getSession();
 
-                HttpSession ss = request.getSession();
-                ss.setAttribute("test", test);
+        if (ss.getAttribute("acc") != null) {
+            if (request.getParameter("join") != null) {
+                String code = request.getParameter("roomCode");
+                String notice = "";
+                DAO dao = new DAO();
+                if (dao.getTestRoomIsActive(code) != null) {
+                    String idTest = dao.getTestRoomIsActive(code);
+                    Tests test = dao.getTestWithID(idTest);
+                    List<Questions> q = dao.getQuestionWithTest(idTest);
+                    Rooms r = dao.getRoom(code);
 
-                request.setAttribute("listQuestions", q);
-                request.setAttribute("idRoom", r.getIdRoom());
-                request.getRequestDispatcher("test.jsp").forward(request, response);
-            } else {
-                notice = "Code error";
-                request.setAttribute("notice", notice);
-                request.getRequestDispatcher("exam.jsp").forward(request, response);
+                    ss.setAttribute("test", test);
 
+                    request.setAttribute("listQuestions", q);
+                    request.setAttribute("idRoom", r.getIdRoom());
+                    request.getRequestDispatcher("test.jsp").forward(request, response);
+                } else {
+                    notice = "Code error";
+                    request.setAttribute("notice", notice);
+                    request.getRequestDispatcher("exam.jsp").forward(request, response);
+
+                }
+            } else if (request.getParameter("create") != null) {
+                response.sendRedirect("question?method=addQuestionD");
             }
-        } else if (request.getParameter("create") != null) {
-            response.sendRedirect("question?method=addQuestion3");
+        } else {
+            request.setAttribute("notice", "Please login");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         }
 
     }

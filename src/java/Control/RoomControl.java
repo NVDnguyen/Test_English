@@ -48,6 +48,11 @@ public class RoomControl extends HttpServlet {
             String idRoom = request.getParameter("idRoom");
             dao.updateActiveRoom(idRoom, "true");
 
+        }else if (request.getParameter("action").equals("delete")) { // active => true
+            String idRoom = request.getParameter("idRoom");
+            
+            dao.updateActiveRoom(idRoom, "true");
+
         }
         
         ArrayList<Rooms> rr = new ArrayList<>();

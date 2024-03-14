@@ -47,11 +47,7 @@
             <div class="container">
                 <div >
                     <div class=" d-flex justify-content-center align-items-center">
-                        <ul class="left-info">
-                            <li><a href="#"><i class="fa fa-clock-o text-white"></i>Mon-Fri 09:00-17:00</a></li>
-                            <li><a href="#"><i class="fa fa-phone text-white"></i>090-080-0760</a></li>
-
-                        </ul>
+                        
                     </div>
                 </div>
             </div>
@@ -204,6 +200,8 @@
                                                     <c:if test="${room.active eq 'false' }">
                                                         <td><a href="room?action=start&idRoom=${room.idRoom}" class="text-success">Start</a></td>
                                                     </c:if>
+
+
 
 
 

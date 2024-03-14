@@ -86,7 +86,7 @@
                                 </tbody>
                             </table>
 
-                                        <a href="question?method=create&idTest=${test.idTest}">Add Question</a>               
+                            <a href="question?method=create&idTest=${test.idTest}">Add Question</a>               
                             <input type="submit" value="Submit">
 
                         </form>
@@ -104,6 +104,40 @@
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!--        <script>
+            function getTitle(str) {
+                var startIndex = str.indexOf("<em>");
+                var endIndex =str.indexOf("</em>");
+                if (startIndex === -1 || endIndex=== -1) {
+                    return "";
+                }
+                return str.substring(startIndex+4,endIndex);
+            }
+            function getQuestion(str) {
+                var part = str.split("<p>");
+                var q = part[2];
+                var end = q.indexOf("</p>");
+                return q.substring(end);
+            }
+            function getAnswer(str){
+                var start = str.indexOf("</strong>");
+                if(str.substring(start+9,start+16) === "<span>"){
+                    var sub = str.split("</span>");
+                    var sub2 = sub[1];
+                    var start2 = sub2.indexOf("<span>")
+                    return str.substring(<span>+6sub2end);
+                }else{
+                    var end = str.indexOf("</span>");
+                    return str.substring(start+9,end);
+                }
+            }
+//            <p><strong><span>A. </span></strong><span>permitt<u>ed</u></span></p>            
+//            <p><span><strong>A. </strong>doesn?t</span></p>
+//            Câu1 < br > <div class="question-name"> 
+//                    <p><strong><em>Mark the letter A, B, C, or D on your answer sheet to indicate the word that differs from the other three in the position of primary stress in each of the following questions.</em></strong></p>
+//                                <p>Lady Gaga is an American singer, songwriter and actress, ______?</p> 
+//                                        </div>
+        </script>-->
     </body>
 
 </html>

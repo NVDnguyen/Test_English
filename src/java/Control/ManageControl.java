@@ -5,7 +5,6 @@
 package Control;
 
 import Model.Accounts;
-import Model.Topics;
 import dao.DAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,13 +13,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  *
  * @author nguye
  */
-public class LoginControl extends HttpServlet {
+public class ManageControl extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +38,10 @@ public class LoginControl extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginControl</title>");
+            out.println("<title>Servlet ManageControl</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginControl at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ManageControl at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,7 +60,46 @@ public class LoginControl extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+
+        PrintWriter out = response.getWriter();
+        DAO dao = new DAO();
+        HttpSession ss = request.getSession();
+        if (ss.getAttribute("acc") != null) {
+            Accounts acc = (Accounts) ss.getAttribute("acc");
+            if (acc.getIsAdmin().equals("true")) {
+                if (request.getParameter("method") == null) {
+
+                } else if (request.getParameter("method").equals("band")) {
+                    if (dao.bandAccount(request.getParameter("userName"))) {
+
+                    } else {
+
+                        out.println("alert('Error occurred while banning this account');");
+
+                    }
+
+                } else if (request.getParameter("method").equals("unband")) {
+                    if (dao.unbandAccount(request.getParameter("userName"))) {
+
+                    } else {
+
+                        out.println("alert('Error occurred while unbanning this account');");
+
+                    }
+                }
+            } else {
+                out.println("alert('Don't hack me);");
+
+                return;
+            }
+            ArrayList<Accounts> listAccount = dao.getAllAccount();
+            request.setAttribute("listAccount", listAccount);
+            request.getRequestDispatcher("Manage.jsp").forward(request, response);
+
+        } else {
+            out.print("?????????????????????");
+        }
+
     }
 
     /**
@@ -75,47 +113,7 @@ public class LoginControl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //get data from dao
-        String notice = "";
-        DAO dao = new DAO();
-        String user = request.getParameter("user");
-        String pass = request.getParameter("pass");
-        if (!(user.isBlank() && pass.isBlank())) {
-            Accounts acc = new Accounts(user, pass);
-            if (request.getParameter("sign_in") != null) {
-                if (dao.checkAccount(acc)) {
-                    notice = "";
-                    acc = dao.getAccount(user, pass);
-                    //trans
-                    HttpSession session = request.getSession();
-                    session.setAttribute("acc", acc);
-                    response.sendRedirect("home");
-                    return;
-                } else {
-                    notice = "Wrong user name or password !";
-
-                }
-            } else if (request.getParameter("sign_up") != null) {
-                if (!dao.checkAccount(acc)) {
-                    if (dao.addAccount(acc)) {
-                        HttpSession session = request.getSession();
-                        session.setAttribute("acc", acc);
-                        notice = "Login again please ! ";
-
-                    } else {
-                        notice = "Error to create account ! ";
-
-                    }
-                } else {
-                    notice = "This account available";
-                }
-            }
-        } else {
-            notice = "Please fill in blank !";
-        }
-        request.setAttribute("notice", notice);
-        request.getRequestDispatcher("login.jsp").forward(request, response);
-
+        processRequest(request, response);
     }
 
     /**

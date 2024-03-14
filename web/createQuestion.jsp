@@ -27,7 +27,7 @@
 
                             <div class="form-group">
                                 <label for="numOfQuestion">Enter number of Questions:</label>
-                                <input type="number" class="form-control" id="numOfQuestion" name="numOfQuestion">
+                                <input type="number" required class="form-control" id="numOfQuestion" name="numOfQuestion">
                             </div>
                             <button type="submit" class="btn btn-primary" name="inNum">Next</button>
                         </form>
@@ -99,7 +99,7 @@
 
                         </form>
                     </c:if>
-                    <!-- when is admin and create test and question for a lesson -->
+                    <!-- when is admin and create test and question for a lesson  2 -->
                     <c:if test="${c}">
                         <form method="post" action="question?method=addQuestionC">
 
@@ -163,7 +163,7 @@
 
                         </form>
                     </c:if>
-                    <!-- when is admin and create question for 1 test existed -->
+                    <!-- when is admin and create question for 1 test existed 3-->
                     <c:if test="${d}">
                         <form method="post" action="question?method=addQuestionD&idTest=${idTest}">
 

@@ -18,10 +18,10 @@
         <div id="logreg-forms">
             <form action="login" method="post" class="form-signin">  
                 <div class="text-center font-weight-bold display-4">Login</div><br><!-- comment -->
-                <input type="user" name="user" id="inputEmail" class="form-control" placeholder="User name" required="" autofocus="">
+                <input type="user" name="user" id="inputEmail" class="form-control" placeholder="User name" required autofocus="" value="${sessionScope.acc.userName}">
                 <!-- input password -->
                 <div class="input-group">
-                    <input type="password" name="pass" id="inputPassword1" class="form-control" placeholder="Password" required="">                    
+                    <input type="password" name="pass" id="inputPassword1" class="form-control" placeholder="Password" required value="${sessionScope.acc.password}">                    
                 </div>
 
                 <button class="btn btn-success btn-block" type="submit" name="sign_in"><i class="fas fa-sign-in-alt"></i> Sign in</button>               

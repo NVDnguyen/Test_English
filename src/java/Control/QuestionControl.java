@@ -76,11 +76,11 @@ public class QuestionControl extends HttpServlet {
                     request.setAttribute("idTest", idTest);
                     request.setAttribute("action", "1");
                 }
-            } else if (request.getParameter("method").equals("addQuestion2")) { //method add question for test in lesson page     
+            } else if (request.getParameter("method").equals("addQuestionC")) { //method add question for test in lesson page     
                 request.setAttribute("idLesson", request.getParameter("idLesson"));
                 request.setAttribute("action", "2");
 
-            } else if (request.getParameter("method").equals("addQuestion3")) { //create test for room exam   
+            } else if (request.getParameter("method").equals("addQuestionD")) { //create test for room exam   
                 request.setAttribute("action", "3");
 
             }
@@ -110,116 +110,174 @@ public class QuestionControl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession ss = request.getSession();
-        Accounts acc = (Accounts) ss.getAttribute("acc");
-        DAO dao = new DAO();
+        HttpSession ss = request.getSession(); 
         PrintWriter out = response.getWriter();
-        if (request.getParameter("method").equals("create")) { // get number of question
-            if (request.getParameter("inNum") != null) {
-                String sizeSTR = request.getParameter("numOfQuestion");
-                request.setAttribute("a", true);
-                request.setAttribute("b", false);
-                request.setAttribute("c", false);
-                request.setAttribute("d", false);
-                try {
-                    int size = Integer.parseInt(sizeSTR);
-                    if (size > 0) {
-                        numOfQuestion = size;
-                        // action 1 create,add question for idtest, only admin , in edit page
-                        if (request.getParameter("action").equals("1")) {
-                            if (!request.getParameter("idTest").isBlank() && acc.getIsAdmin().equals("true")) {
-                                String idTest = request.getParameter("idTest");
-                                request.setAttribute("idTest", idTest);
-                                request.setAttribute("d", true);
+        if (ss.getAttribute("acc") != null) {
+            Accounts acc = (Accounts) ss.getAttribute("acc");
+            DAO dao = new DAO();
+            // get number of question
+            if (request.getParameter("method").equals("create")) { 
+                if (request.getParameter("inNum") != null) {
+                    String sizeSTR = request.getParameter("numOfQuestion");
+                    request.setAttribute("a", true);
+                    request.setAttribute("b", false);
+                    request.setAttribute("c", false);
+                    request.setAttribute("d", false);
+                    try {
+                        int size = Integer.parseInt(sizeSTR);
+                        if (size > 0) {
+                            numOfQuestion = size;
+                            // action 1 create,add question for idtest, only admin , in edit page 
+                            if (request.getParameter("action").equals("1")) {
+                                if (!request.getParameter("idTest").isBlank() && acc.getIsAdmin().equals("true")) {
+                                    String idTest = request.getParameter("idTest");
+                                    request.setAttribute("idTest", idTest);
+                                    request.setAttribute("d", true);
 
+                                }
+                            } // action 2 method add question for test in idlesson page 
+                            else if (request.getParameter("action").equals("2")) {
+                                if (!request.getParameter("idLesson").isBlank() && acc.getIsAdmin().equals("true")) {
+                                    Lessons ls = dao.getLessonWithID(request.getParameter("idLesson"));
+                                    request.setAttribute("lesson", ls);
+                                    request.setAttribute("c", true);
+                                }
+                            } // action 3 create test for room exam
+                            else if (request.getParameter("action").equals("3")) {
+                                request.setAttribute("b", true);
+                            } else {
+                                out.println("Something error with this action !!!");
+                                return;
                             }
-                        } // action 2 method add question for test in idlesson page 
-                        else if (request.getParameter("action").equals(2)) {
-                            if (!request.getParameter("idLesson").isBlank() && acc.getIsAdmin().equals("true")) {
-                                Lessons ls = dao.getLessonWithID(request.getParameter("idLesson"));
-                                request.setAttribute("lesson", ls);
-                                request.setAttribute("c", true);
-                            }
-                        } // action 3 create test for room exam
-                        else if (request.getParameter("action").equals("3")) {
-                            request.setAttribute("b", true);
+
+                            request.setAttribute("a", false);
+                            request.setAttribute("size", size);
                         } else {
-                            request.setAttribute("notice", "Something error !!!");
+                            request.setAttribute("notice", "Please enter number >0 !!!");
                         }
-
-                        request.setAttribute("a", false);
-                        request.setAttribute("size", size);
-                    } else {
-                        request.setAttribute("notice", "Please enter number >0 !!!");
+                    } catch (Exception e) {
+                        request.setAttribute("notice", e.getMessage());
                     }
-                } catch (Exception e) {
-                    request.setAttribute("notice", e.getMessage());
+                    request.getRequestDispatcher("createQuestion.jsp").forward(request, response);
+
                 }
-                request.getRequestDispatcher("createQuestion.jsp").forward(request, response);
 
-            }
+            } 
+            // create question for Room method = addQuestionB
+            else if (request.getParameter("method").equals("addQuestionB")) {
+                if (numOfQuestion > 0 && acc != null) {
+                    String idTest = "";
+                    String nameRoom = request.getParameter("nameRoom");
+                    String time = request.getParameter("time");
+                    try {
+                        //add question
+                        int t = Integer.parseInt(time);
+                        if (t > 0) {
+                            idTest = dao.createNewTest(nameRoom, null, t);
+                            for (int i = 1; i <= numOfQuestion; i++) {
+                                String title = request.getParameter("title" + i);
+                                String question = request.getParameter("question" + i);
+                                String asA = request.getParameter("answerA" + i);
+                                String asB = request.getParameter("answerB" + i);
+                                String asC = request.getParameter("answerC" + i);
+                                String asD = request.getParameter("answerD" + i);
+                                String correctAnswer = request.getParameter("correctAnswer" + i);
 
-        } // create question for Room
-        else if (request.getParameter("method").equals("addQuestionB")) {
-            if (numOfQuestion > 0 && acc != null) {
-                String idTest = "";
-                String nameRoom = request.getParameter("nameRoom");
-                String time = request.getParameter("time");
-                try {
-                    //add question
-                    int t = Integer.parseInt(time);
-                    if (t > 0) {
-                        idTest = dao.createNewTest(nameRoom, null, t);
-                        for (int i = 1; i <= numOfQuestion; i++) {
-                            String title = request.getParameter("title" + i);
-                            String question = request.getParameter("question" + i);
-                            String asA = request.getParameter("answerA" + i);
-                            String asB = request.getParameter("answerB" + i);
-                            String asC = request.getParameter("answerC" + i);
-                            String asD = request.getParameter("answerD" + i);
-                            String correctAnswer = request.getParameter("correctAnswer" + i);
+                                String description = "Câu" + i + "<br><div class=\"question-name\"> \n"
+                                        + " <p><strong><em>" + title + "</em></strong></p>\n"
+                                        + " <p>" + question + "</p> \n"
+                                        + "</div>";
+                                String answerA = "<p><span><strong>A. </strong>" + asA + "</span></p>";
+                                String answerB = "<p><span><strong>A. </strong>" + asB + "</span></p>";
+                                String answerC = "<p><span><strong>A. </strong>" + asC + "</span></p>";
+                                String answerD = "<p><span><strong>A. </strong>" + asD + "</span></p>";
 
-                            String description = "Câu" + i + "<br><div class=\"question-name\"> \n"
-                                    + " <p><strong><em>" + title + "</em></strong></p>\n"
-                                    + " <p>" + question + "</p> \n"
-                                    + "</div>";
-                            String answerA = "<p><span><strong>A. </strong>" + asA + "</span></p>";
-                            String answerB = "<p><span><strong>A. </strong>" + asB + "</span></p>";
-                            String answerC = "<p><span><strong>A. </strong>" + asC + "</span></p>";
-                            String answerD = "<p><span><strong>A. </strong>" + asD + "</span></p>";
+                                Questions q = new Questions(description, answerA, answerB, answerC, answerD, idTest, correctAnswer);
+                                dao.addQuestion(q);
 
-                            Questions q = new Questions(description, answerA, answerB, answerC, answerD, idTest, correctAnswer);
-                            dao.addQuestion(q);
+                            }
+                            // create rooms    
+                            Rooms r = new Rooms(nameRoom, acc.getUserName(), idTest, "false");
+                            dao.addRoom(r);
+                            ArrayList<Rooms> rr = new ArrayList<>();
+                            rr = dao.getAllRoom(acc);
+                            ss.setAttribute("rooms", rr);
+                            request.getRequestDispatcher("exam.jsp").forward(request, response);
+                        }//else go back to lesson page
 
+                    } catch (Exception e) {
+                        System.out.println("addQuestion" + e.getMessage());
+                    }
+
+                }
+            } // create question for a lesson addQuestionC
+            else if (request.getParameter("method").equals("addQuestionC") && acc.getIsAdmin().equals("true")) {
+
+                if (numOfQuestion > 0) {
+                    String idTest = "";
+                    String time = request.getParameter("time");
+                    String descriptionTs = request.getParameter("descriptionTs");
+                    String idLesson = request.getParameter("idLesson");
+                    try {
+                        //add question
+                        int t = Integer.parseInt(time);
+                        if (t > 0) {
+                            // create new test 
+                            idTest = dao.createNewTest(descriptionTs, idLesson, t);
+                            // add question
+                            for (int i = 1; i <= numOfQuestion; i++) {
+                                String title = request.getParameter("title" + i);
+                                String question = request.getParameter("question" + i);
+                                String asA = request.getParameter("answerA" + i);
+                                String asB = request.getParameter("answerB" + i);
+                                String asC = request.getParameter("answerC" + i);
+                                String asD = request.getParameter("answerD" + i);
+                                String correctAnswer = request.getParameter("correctAnswer" + i);
+
+                                String description = "Câu" + i + "<br><div class=\"question-name\"> \n"
+                                        + " <p><strong><em>" + title + "</em></strong></p>\n"
+                                        + " <p>" + question + "</p> \n"
+                                        + "</div>";
+                                String answerA = "<p><span><strong>A. </strong>" + asA + "</span></p>";
+                                String answerB = "<p><span><strong>B. </strong>" + asB + "</span></p>";
+                                String answerC = "<p><span><strong>C. </strong>" + asC + "</span></p>";
+                                String answerD = "<p><span><strong>D. </strong>" + asD + "</span></p>";
+
+                                Questions q = new Questions(description, answerA, answerB, answerC, answerD, idTest, correctAnswer);
+                                if (!dao.addQuestion(q)) {
+                                    out.print("Cannot add question for this test of lesson");
+                                };
+                                //go back to lessson                           
+                                Topics tp = (Topics) ss.getAttribute("tp");
+                                // get lessons of this topic
+                                List<Lessons> ls = dao.getLessonsWithTopic(tp.getIdTopic());
+                                List<Tests> lsTest = dao.getAllTest();
+                                // put up session
+                                ss.setAttribute("tp", tp);
+                                ss.setAttribute("ls", ls);
+                                request.setAttribute("lsTest", lsTest);
+                                request.getRequestDispatcher("lesson.jsp").forward(request, response);
+
+//                            request.getRequestDispatcher("/home").forward(request, response);
+                            }
+                        } else {
+                            out.print("Time must positive and > 0");
+                            return;
                         }
-                        // create rooms    
-                        Rooms r = new Rooms(nameRoom, acc.getUserName(), idTest, "false");
-                        dao.addRoom(r);
-                        ArrayList<Rooms> rr = new ArrayList<>();
-                        rr = dao.getAllRoom(acc);
-                        ss.setAttribute("rooms", rr);
-                        request.getRequestDispatcher("exam.jsp").forward(request, response);
-                    }//else go back to lesson page
 
-                } catch (Exception e) {
-                    System.out.println("addQuestion" + e.getMessage());
+                    } catch (Exception e) {
+                        System.out.println("addQuestion" + e.getMessage());
+                        out.print(e.getMessage());
+                    }
+
                 }
+            } // create / add question for test addQuestionD
+            else if (request.getParameter("method").equals("addQuestionD") && acc.getIsAdmin().equals("true")) {
 
-            }
-        } // create question for a lesson
-        else if (request.getParameter("method").equals("addQuestionC") && acc.getIsAdmin().equals("true")) {
+                if (numOfQuestion > 0) {
 
-            if (numOfQuestion > 0) {
-                String idTest = "";
-                String time = request.getParameter("time");
-                String descriptionTs = request.getParameter("descriptionTs");
-                String idLesson = request.getParameter("idLesson");
-                try {
-                    //add question
-                    int t = Integer.parseInt(time);
-                    if (t > 0) {
-                        // create new test 
-                        idTest = dao.createNewTest(descriptionTs, idLesson, t);
+                    String idTest = request.getParameter("idTest");
+                    try {
                         // add question
                         for (int i = 1; i <= numOfQuestion; i++) {
                             String title = request.getParameter("title" + i);
@@ -254,132 +312,78 @@ public class QuestionControl extends HttpServlet {
 
 //                            request.getRequestDispatcher("/home").forward(request, response);
                         }
-                    } //else go back to leson page
 
-                } catch (Exception e) {
-                    System.out.println("addQuestion" + e.getMessage());
-                    out.print(e.getMessage());
+                    } catch (Exception e) {
+                        System.out.println("addQuestion" + e.getMessage());
+                        out.print(e.getMessage());
+                    }
+
                 }
-
-            }
-        } // create / add question for test
-        else if (request.getParameter("method").equals("addQuestionD") && acc.getIsAdmin().equals("true")) {
-
-            if (numOfQuestion > 0) {
-
+            } else if (request.getParameter("method").equals("edit") && acc.getIsAdmin().equals("true")) {
+                //test descriptionTs,time,idLesson,idTest
                 String idTest = request.getParameter("idTest");
-                try {
-                    // add question
-                    for (int i = 1; i <= numOfQuestion; i++) {
-                        String title = request.getParameter("title" + i);
-                        String question = request.getParameter("question" + i);
-                        String asA = request.getParameter("answerA" + i);
-                        String asB = request.getParameter("answerB" + i);
-                        String asC = request.getParameter("answerC" + i);
-                        String asD = request.getParameter("answerD" + i);
-                        String correctAnswer = request.getParameter("correctAnswer" + i);
-
-                        String description = "Câu" + i + "<br><div class=\"question-name\"> \n"
-                                + " <p><strong><em>" + title + "</em></strong></p>\n"
-                                + " <p>" + question + "</p> \n"
-                                + "</div>";
-                        String answerA = "<p><span><strong>A. </strong>" + asA + "</span></p>";
-                        String answerB = "<p><span><strong>B. </strong>" + asB + "</span></p>";
-                        String answerC = "<p><span><strong>C. </strong>" + asC + "</span></p>";
-                        String answerD = "<p><span><strong>D. </strong>" + asD + "</span></p>";
-
-                        Questions q = new Questions(description, answerA, answerB, answerC, answerD, idTest, correctAnswer);
-                        dao.addQuestion(q);
-                        //go back to lessson                           
-                        Topics tp = (Topics) ss.getAttribute("tp");
-                        // get lessons of this topic
-                        List<Lessons> ls = dao.getLessonsWithTopic(tp.getIdTopic());
-                        List<Tests> lsTest = dao.getAllTest();
-                        // put up session
-                        ss.setAttribute("tp", tp);
-                        ss.setAttribute("ls", ls);
-                        request.setAttribute("lsTest", lsTest);
-                        request.getRequestDispatcher("lesson.jsp").forward(request, response);
-
-//                            request.getRequestDispatcher("/home").forward(request, response);
-                    }
-
-                } catch (Exception e) {
-                    System.out.println("addQuestion" + e.getMessage());
-                    out.print(e.getMessage());
+                //String idLesson = request.getParameter("idLesson");
+                String timeSTR = request.getParameter("time");
+                String descriptionTs = request.getParameter("descriptionTs");
+                int time = Integer.parseInt(timeSTR);
+                if (time < 0) {
+                    time = -time;
                 }
-
-            }
-        } else if (request.getParameter("method").equals("edit") && acc.getIsAdmin().equals("true")) {
-            //test descriptionTs,time,idLesson,idTest
-            String idTest = request.getParameter("idTest");
-            //String idLesson = request.getParameter("idLesson");
-            String timeSTR = request.getParameter("time");
-            String descriptionTs = request.getParameter("descriptionTs");
-            int time = Integer.parseInt(timeSTR);
-            if (time < 0) {
-                time = -time;
-            }
-            Tests test = dao.getTestWithID(idTest);
-            test.setDescriptionTs(descriptionTs);
-            test.setTime(timeSTR);
-            if (!dao.updateTest(test)) {
-                out.print("Error edit Test");
-                return;
-            }
-
-            ArrayList<Questions> listQuestion = dao.getQuestionWithTest(idTest);
-
-            for (Questions questions : listQuestion) {
-                try {
-                    String idQuestion = questions.getIdQuestion();
-                    String descriptionQ = request.getParameter("descriptionQ" + idQuestion);
-                    String delete = request.getParameter("delete" + idQuestion);
-                    String answer1 = request.getParameter("answerA" + idQuestion);
-                    String answer2 = request.getParameter("answerB" + idQuestion);
-                    String answer3 = request.getParameter("answerC" + idQuestion);
-                    String answer4 = request.getParameter("answerD" + idQuestion);
-                    String correctAnswer = request.getParameter("correctAnswer" + idQuestion);
-
-                    if (delete != null) {
-                        dao.deleteQuestion(idQuestion);
-                    } else {
-                        Questions q = new Questions(questions.getIdQuestion(), descriptionQ, answer1, answer2, answer3, answer4, idTest, correctAnswer);
-                        if (!dao.updateQuestion(q)) {
-                            out.print("Error edit Test,Question" + q.toString());
-                            return;
-
-                        }
-                    }
-
-                } catch (Exception e) {
-                    out.print("Error edit Test,Question:" + e.getMessage());
+                Tests test = dao.getTestWithID(idTest);
+                test.setDescriptionTs(descriptionTs);
+                test.setTime(timeSTR);
+                if (!dao.updateTest(test)) {
+                    out.print("Error edit Test");
                     return;
                 }
 
-            }
-            //go back to lessson                           
-            Topics tp = (Topics) ss.getAttribute("tp");
-            // get lessons of this topic
-            List<Lessons> ls = dao.getLessonsWithTopic(tp.getIdTopic());
-            List<Tests> lsTest = dao.getAllTest();
-            // put up session
-            ss.setAttribute("tp", tp);
-            ss.setAttribute("ls", ls);
-            request.setAttribute("lsTest", lsTest);
-            request.getRequestDispatcher("lesson.jsp").forward(request, response);
+                ArrayList<Questions> listQuestion = dao.getQuestionWithTest(idTest);
 
+                for (Questions questions : listQuestion) {
+                    try {
+                        String idQuestion = questions.getIdQuestion();
+                        String descriptionQ = request.getParameter("descriptionQ" + idQuestion);
+                        String delete = request.getParameter("delete" + idQuestion);
+                        String answer1 = request.getParameter("answerA" + idQuestion);
+                        String answer2 = request.getParameter("answerB" + idQuestion);
+                        String answer3 = request.getParameter("answerC" + idQuestion);
+                        String answer4 = request.getParameter("answerD" + idQuestion);
+                        String correctAnswer = request.getParameter("correctAnswer" + idQuestion);
+
+                        if (delete != null) {
+                            dao.deleteQuestion(idQuestion);
+                        } else {
+                            Questions q = new Questions(questions.getIdQuestion(), descriptionQ, answer1, answer2, answer3, answer4, idTest, correctAnswer);
+                            if (!dao.updateQuestion(q)) {
+                                out.print("Error edit Test,Question" + q.toString());
+                                return;
+
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        out.print("Error edit Test,Question:" + e.getMessage());
+                        return;
+                    }
+
+                }
+                //go back to lessson                           
+                Topics tp = (Topics) ss.getAttribute("tp");
+                // get lessons of this topic
+                List<Lessons> ls = dao.getLessonsWithTopic(tp.getIdTopic());
+                List<Tests> lsTest = dao.getAllTest();
+                // put up session
+                ss.setAttribute("tp", tp);
+                ss.setAttribute("ls", ls);
+                request.setAttribute("lsTest", lsTest);
+                request.getRequestDispatcher("lesson.jsp").forward(request, response);
+
+            }
+        }else{
+            out.print("Please Login to continue !!!");
+            return;
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }

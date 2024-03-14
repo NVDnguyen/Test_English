@@ -9,7 +9,7 @@ package Model;
  * @author nguye
  */
 public class Accounts {
-    private String userName,password, isAdmin;
+    private String userName,password, isAdmin, band;
 
     public Accounts() {
     }
@@ -18,13 +18,23 @@ public class Accounts {
         this.userName = userName;
         this.password = password;
         this.isAdmin= "0";
-    }  
-    public Accounts(String userName, String password,String isadmin) {
+    }   
+
+    public Accounts(String userName, String password, String isAdmin, String band) {
         this.userName = userName;
         this.password = password;
-        this.isAdmin= isadmin;
-    } 
+        this.isAdmin = isAdmin;
+        this.band = "0";
+    }
 
+    public String getBand() {
+        return band;
+    }
+
+    public void setBand(String band) {
+        this.band = band;
+    }
+    
 
     public String getUserName() {
         return userName;
@@ -52,8 +62,10 @@ public class Accounts {
 
     @Override
     public String toString() {
-        return "Accounts{" + "userName=" + userName + ", password=" + password + ", isAdmin=" + isAdmin + '}';
+        return "Accounts{" + "userName=" + userName + ", password=" + password + ", isAdmin=" + isAdmin + ", band=" + band + '}';
     }
+
+    
     
 
     

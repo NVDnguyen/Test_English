@@ -47,11 +47,7 @@
             <div class="container">
                 <div >
                     <div class=" d-flex justify-content-center align-items-center">
-                        <ul class="left-info">
-                            <li><a href="#"><i class="fa fa-clock-o text-white"></i>Mon-Fri 09:00-17:00</a></li>
-                            <li><a href="#"><i class="fa fa-phone text-white"></i>090-080-0760</a></li>
-
-                        </ul>
+                       
                     </div>
                 </div>
             </div>
@@ -77,7 +73,7 @@
                                     </li>
                                 </c:if>
                                 <c:if test="${o.idTopic eq sessionScope.tp.idTopic}">
-                                    <li class="nav-item active">
+                                    <li class="nav-item">
                                         <a class="nav-link" href="lesson?topic=${o.idTopic}">${o.nameTopic}</a>
                                     </li>
                                 </c:if>

@@ -47,11 +47,7 @@
             <div class="container">
                 <div >
                     <div class=" d-flex justify-content-center align-items-center">
-                        <ul class="left-info">
-                            <li><a href="#"><i class="fa fa-clock-o text-white"></i>Mon-Fri 09:00-17:00</a></li>
-                            <li><a href="#"><i class="fa fa-phone text-white"></i>090-080-0760</a></li>
-
-                        </ul>
+                        
                     </div>
                 </div>
             </div>
@@ -76,133 +72,140 @@
                                 <a class="nav-link" href="home">Home</a>
                             </li>
                             <!-- lessons -->
-                        <c:forEach items="${sessionScope.listTopic}" var="o">
+                            <c:forEach items="${sessionScope.listTopic}" var="o">
                                 <li class="nav-item">
                                     <a class="nav-link" href="lesson?topic=${o.idTopic}">${o.nameTopic}</a>
                                 </li>   
-                        </c:forEach>
-                        <!-- feature -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="exam">EXAMS</a>
-                        </li>  
+                            </c:forEach>
+                            <!-- feature -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="exam">EXAMS</a>
+                            </li>
 
-                        <!-- login / log out -->
-                        <c:if test="${empty sessionScope.acc}">
-                            <li class="nav-item"><a class="nav-link" href="login">Login</a></li>
+                            <c:if test="${sessionScope.acc.isAdmin eq 'true'}">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="manage">Manager</a>
+                                </li>
                             </c:if>
 
-                        <c:if test="${not empty sessionScope.acc}">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    ${sessionScope.acc.userName}
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">                                                                            
-                                    <a class="dropdown-item" href="logout">Logout</a>
-                                </div>
-                            </li>
-                        </c:if>
+
+                            <!-- login / log out -->
+                            <c:if test="${empty sessionScope.acc}">
+                                <li class="nav-item"><a class="nav-link" href="login">Login</a></li>
+                                </c:if>
+
+                            <c:if test="${not empty sessionScope.acc}">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        ${sessionScope.acc.userName}
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">                                                                            
+                                        <a class="dropdown-item" href="logout">Logout</a>
+                                    </div>
+                                </li>
+                            </c:if>
 
 
-                    </ul>
-                </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="navbar-nav ml-auto">
-                        <!--                            <li>
-                                                        <a href="login.jsp">
-                                                                                                <i class="fa fa-user fa-lg text-white"></i> 
-                                                            Login
-                                                        </a>
-                                                    </li>-->
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Page Content -->
-    <!-- Banner Starts Here -->
-    <div class="main-banner header-text" id="top">
-        <div class="Modern-Slider">
-            <!-- Item -->
-            <div class="item item-1">
-                <div class="img-fill">
-                    <div class="text-content">
-                        <h6>Test-English</h6>
-                        <h4>Take your learning with you!</h4>
-                        <p>Grammar lessons with exercises and clear explanations, grammar charts, reading and listening tests with transcriptions, writing lessons, instant marking, answer feedback, and much more! </p>
-                        <a href="#home" class="filled-button" style="width: 4cm"></a>
+                        </ul>
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <ul class="navbar-nav ml-auto">
+                            <!--                            <li>
+                                                            <a href="login.jsp">
+                                                                                                    <i class="fa fa-user fa-lg text-white"></i> 
+                                                                Login
+                                                            </a>
+                                                        </li>-->
+                        </ul>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div> 
+            </nav>
+        </header>
 
-    <div class="services" id="grammar">
-        <div class="container">
-            <div class="col-md-12">
-                <div class="section-heading">
-                    <h2>What would we  <em>LEARN</em> today ?</h2>            
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Menu Items -->
-    <div class="services" >
-        <div class="container">
-            <div  class="row ">
-
-                <c:forEach items="${listTopic}" var="o">
-                    <!-- Item Lession -->
-                    <div class="col-md-4 ">
-                        <div class="service-item" >
-                            <img src="${o.imageTopic}" alt="">
-                            <div class="down-content">
-                                <h4>${o.nameTopic}</h4>
-                                <p  style="height:5cm" >${o.describeTopic}</p>
-                                <a href="lesson?topic=${o.idTopic}" class="filled-button">Go to the Test</a>
-                            </div>
+        <!-- Page Content -->
+        <!-- Banner Starts Here -->
+        <div class="main-banner header-text" id="top">
+            <div class="Modern-Slider">
+                <!-- Item -->
+                <div class="item item-1">
+                    <div class="img-fill">
+                        <div class="text-content">
+                            <h6>Test-English</h6>
+                            <h4>Take your learning with you!</h4>
+                            <p>Grammar lessons with exercises and clear explanations, grammar charts, reading and listening tests with transcriptions, writing lessons, instant marking, answer feedback, and much more! </p>
+                            <a href="#home" class="filled-button" style="width: 4cm"></a>
                         </div>
                     </div>
-                </c:forEach>
+                </div>
             </div>
-        </div>
-    </div>
+        </div> 
 
-
-
-
-
-
-
-    <div class="partners">
-        <div class="container">
-            <div class="row">
+        <div class="services" id="grammar">
+            <div class="container">
                 <div class="col-md-12">
-                    <div class="owl-partners owl-carousel">
-
-
-
+                    <div class="section-heading">
+                        <h2>What would we  <em>LEARN</em> today ?</h2>            
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        <!-- Menu Items -->
+        <div class="services" >
+            <div class="container">
+                <div  class="row ">
+
+                    <c:forEach items="${listTopic}" var="o">
+                        <!-- Item Lession -->
+                        <div class="col-md-4 ">
+                            <div class="service-item" >
+                                <img src="${o.imageTopic}" alt="">
+                                <div class="down-content">
+                                    <h4>${o.nameTopic}</h4>
+                                    <p  style="height:5cm" >${o.describeTopic}</p>
+                                    <a href="lesson?topic=${o.idTopic}" class="filled-button">Go to the Test</a>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+        </div>
 
 
 
-    <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Additional Scripts -->
-    <script src="assets/js/custom.js"></script>
-    <script src="assets/js/owl.js"></script>
-    <script src="assets/js/slick.js"></script>
-    <script src="assets/js/accordions.js"></script>
 
-  
 
-</body>
+
+        <div class="partners">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="owl-partners owl-carousel">
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Bootstrap core JavaScript -->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Additional Scripts -->
+        <script src="assets/js/custom.js"></script>
+        <script src="assets/js/owl.js"></script>
+        <script src="assets/js/slick.js"></script>
+        <script src="assets/js/accordions.js"></script>
+
+
+
+    </body>
 
 
 
