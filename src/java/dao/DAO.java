@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -427,7 +428,7 @@ public class DAO {
     //question
     public ArrayList<Questions> getAllQuestion() {
         ArrayList<Questions> list = new ArrayList<>();
-        String query = "SELECT * FROM Questions";
+        String query = "SELECT * FROM Questions \n order by random() ";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -472,6 +473,7 @@ public class DAO {
                 );
                 list.add(getSQL);
             }
+            Collections.shuffle(list);
         } catch (Exception e) {
             System.out.println("getQuestionWithTest:" + e.getMessage());
 
@@ -1059,60 +1061,8 @@ public class DAO {
     //main test
     public static void main(String[] args) {
         DAO dao = new DAO();
-//        List<Topic> list = dao.getAllTopic();
-//        for (Topics topic : list) {
-//            System.out.println(topic.toString());
-//
-//        }
-//        List<Lessons> listL = dao.getAllLessons();
-//        for (Lessons topic : listL) {
-//            System.out.println(topic.toString());
-//
-//        }
-////        // Get and print Tests
-//        List<Tests> listT = dao.getAllTest();
-//        for (Tests test : listT) {
-//            System.out.println(test.toString());
-//        }
-//        //
-//        List<Questions> listQ = dao.getAllQuestion();
-//        for (Questions q : listQ) {
-//            System.out.println(q.toString());
-//        }
-//        //
-//        List<Answer> listA = dao.getAllAnswer();
-//        for (Answer q : listA) {
-//            System.out.println(q.toString());
-//        }
-//        List<Accounts> a = dao.getAllAccount();
-//        for (Accounts accounts : a) {
-//            System.out.println(accounts.toString());
-//        }
-//        System.out.println(dao.getTestRoomIsActive("X34sd99"));
-
-        //System.out.println(dao.getAnswerWithQuestion("603"));
-//        System.out.println(dao.createNewTest("22", null,60));
-        // System.out.println(dao.getIdTopicWithIDLeson("1"));
-        //       System.out.println(dao.deleteTest("30"));
-        //System.out.println(dao.addRoom(new Rooms("hello", "yyyy", "user12345", "1", "true")));
-//        System.out.println(dao.gettAllReporter());
-//        System.out.println(dao.gettAllReporter("️user12345"));
-//        System.out.println(dao.gettAllReporterWithTest("1"));
-        //System.out.println(dao.getRoom("yyyy"));
-        // System.out.println(dao.gettAllReporterWithCode("1", "1"));
-        // System.out.println(dao.addReporter(new Reporters("user12345", "5", "2")));
-        //System.out.println(dao.getAllAccount());
-        // System.out.println(dao.getQuestionWithTest("1"));
-        //System.out.println(dao.gettAllReporterWithTest("1"));
-        //System.out.println(dao.deleteLesson("8"));
-        // System.out.println(randomCode());
-        System.out.println(dao.getAccount("user12345", "11111"));
+        System.out.println(dao.getQuestionWithTest("1"));
     }
 
-    public static String randomCode() {
-        long now = System.currentTimeMillis();
-        String codeNow = Long.toHexString(now);
-        return codeNow;
-
-    }
+   
 }

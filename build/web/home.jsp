@@ -78,9 +78,9 @@
                                 </li>   
                             </c:forEach>
                             <!-- feature -->
-                            <li class="nav-item">
+<!--                            <li class="nav-item">
                                 <a class="nav-link" href="exam">EXAMS</a>
-                            </li>
+                            </li>-->
 
                             <c:if test="${sessionScope.acc.isAdmin eq 'true'}">
                                 <li class="nav-item">

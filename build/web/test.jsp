@@ -107,10 +107,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach items="${listQuestions}" var="q">
+                            <c:forEach items="${listQuestions}" var="q" varStatus="i">
                                 <tr>
                                     <td>
-                                        <a id="${q.getIdQuestion()}"></a>
+                                        <a id="${q.getIdQuestion()}"></a>                                       
                                         <p>${q.getDescriptionQ()}</p>
                                         <div class="form-check">
                                             <input id="A" type="radio" name="${q.getIdQuestion()}" onclick="selected('${q.getIdQuestion()}A')" class="form-check-input">
