@@ -445,9 +445,11 @@ public class DAO {
                 );
                 list.add(getSQL);
             }
+
+            Collections.shuffle(list);
+
         } catch (Exception e) {
             System.out.println("getAllQuestion:" + e.getMessage());
-
         }
         return list;
     }
@@ -666,38 +668,38 @@ public class DAO {
         String query = "  update Account\n"
                 + "  set band = 1\n"
                 + "  where userName =?";
-        
+
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setString(1, userName);
             int check = ps.executeUpdate();
-            return check >0;
-            
+            return check > 0;
+
         } catch (Exception e) {
-            System.out.println("bandAccount " +e.getMessage());
+            System.out.println("bandAccount " + e.getMessage());
         }
         return false;
     }
-       public boolean unbandAccount(String userName) {
+
+    public boolean unbandAccount(String userName) {
 
         String query = "  update Account\n"
                 + "  set band = 0\n"
                 + "  where userName =?";
-        
+
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setString(1, userName);
             int check = ps.executeUpdate();
-            return check >0;
-            
+            return check > 0;
+
         } catch (Exception e) {
-            System.out.println("bandAccount " +e.getMessage());
+            System.out.println("bandAccount " + e.getMessage());
         }
         return false;
     }
-
 
     //Rooms Exam code
     public String getTestRoomIsActive(String codeRoom) {
@@ -1064,5 +1066,4 @@ public class DAO {
         System.out.println(dao.getQuestionWithTest("1"));
     }
 
-   
 }

@@ -79,9 +79,9 @@
                                 </c:if>
                             </c:forEach>
                             <!-- feature -->
-<!--                            <li class="nav-item">
+                            <li class="nav-item">
                                 <a class="nav-link" href="exam">EXAMS</a>
-                            </li>-->
+                            </li>
 
 
                             <!-- login / log out -->
